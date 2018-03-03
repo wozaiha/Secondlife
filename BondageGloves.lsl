@@ -78,6 +78,7 @@ list butt(integer n){
         if (locked) button+=["Unlock"]; else button+=["Lock"];
         if (binded) button+=["Unbind"]; else button+=["Bind"];
         if (mittened) button+=["Unmitten"]; else button+=["Mitten"];
+		button+=["Access"];
         return button;
     }
      return button;
@@ -103,6 +104,8 @@ default
         else if (message == "Unbind") Core(TOBIND,0,id);
         else if (message == "Mitten") Core(TOMITTEN,1,id);
         else if (message == "Unmitten") Core(TOMITTEN,0,id);
+		else if (message == "Access") llMessageLinked(-1,999,"access menu",id);
+		else if (message == "hide reset") llMessageLinked(-1,999,"reset",id);
         @break;
     }
     run_time_permissions(integer perm){
@@ -115,6 +118,10 @@ default
     changed(integer change){
         if (change & CHANGED_OWNER) llResetScript();
     }
+	attach(key id){
+		if (id == llGetOwner()) {if (locked) Core(TOLOCK,1,id); if (binded) Core(TOBIND,1,id); if (mittened) Core(TOMITTEN,1,id);}
+			else if (id == NULL_KEY) /*    */;
+	}
     timer(){
         llSetTimerEvent(0);
         llListenRemove(handle);
