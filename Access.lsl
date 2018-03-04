@@ -13,9 +13,10 @@ string Owner(){
 integer Ownself(){
     return llList2Integer(llGetLinkMedia(PRIM,FACE,[PRIM_MEDIA_WHITELIST_ENABLE]),0);
 }
-    
-    
+
+
 Add(integer target,key id){
+	if	(id) ; else return;
     if (target==OWNER)
         if (id != llGetOwner()){
             string str=Owner();
@@ -41,7 +42,7 @@ Del(integer target,key id){
     if (target==OWNER){
         integer n=llSubStringIndex(str,(string)id);
         if (n<0) return;
-        str=llDeleteSubString(str,n,n+37);
+        str=llDeleteSubString(str,n,n+36);
         llSetLinkMedia(PRIM,FACE,[PRIM_MEDIA_WHITELIST,str]);
     }
 }
@@ -55,8 +56,8 @@ string Print(){
             for (n==0;n<llGetListLength(lis);n++)        str+="secondlife:///app/agent/" + llList2String(lis,n) + "/about,";
             str=llDeleteSubString(str,-1,-1)+"。";
         }
-    if (Ownself()) str+="\n\n自己：√";
-        else str+="\n\n自己：×";
+    if (Ownself()) str+="\n\n穿戴者：√";
+        else str+="\n\n穿戴者：×";
     return str;
 }
 
@@ -87,14 +88,13 @@ Showdel(key id){
     list button=[];
     integer i;
     for (i==0;i<llGetListLength(lis);i++) button+=(string)i;
-    if (Ownself()) button+="自己";
+    if (Ownself()) button+="穿戴者";
     llDialog(id,Print(),button,-3434343);
     handle=llListen(-3434343,"",id,"");
 }
 
 default{
     link_message( integer sender_num, integer num, string str, key id ){
-        llOwnerSay(Owner());
         if (Check(id,OWNER)) {
             if (str=="access menu")  ShowMenu(id);
                 else if (str=="reset") {
@@ -115,10 +115,9 @@ default{
                 ShowMenu(id);
             }
             else if ((what == -1)) {
-                if (msg=="自己") Del(SELF,llGetOwner());
+                if (msg=="穿戴者") Del(SELF,llGetOwner());
                 else Del(OWNER,llList2Key(llParseString2List(Owner(),[","],[]),(integer)msg));
                 ShowMenu(id);
             }
     }
-}    
-    
+}

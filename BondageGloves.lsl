@@ -11,8 +11,8 @@ integer TOMITTEN=2;
     list mittens=[];
     list binds=[];
     list bam=[];
-integer ani;    
-integer handle;    
+integer ani;
+integer handle;
 
 CheckLockPrim(){
     integer n=2;
@@ -59,7 +59,7 @@ Core(integer what,integer todo,key id){
             if (todo) llRequestPermissions(llGetOwner(), PERMISSION_TRIGGER_ANIMATION);
             else llStopAnimation("KAmitten");
         }
-        
+
             llDialog(id,"Please Choose.",butt(0),-3434343);
             handle=llListen(-3434343,"",id,"");
             llSetTimerEvent(60);
@@ -97,7 +97,7 @@ default
     listen(integer channel, string name, key id, string message){
         llSetTimerEvent(0);
         llListenRemove(handle);
-        if (channel != -3434343) jump break;
+        if (channel != -3434343) return;
         if (message == "Lock") Core(TOLOCK,1,id);
         else if (message == "Unlock") Core(TOLOCK,0,id);
         else if (message == "Bind") Core(TOBIND,1,id);
@@ -106,7 +106,6 @@ default
         else if (message == "Unmitten") Core(TOMITTEN,0,id);
 		else if (message == "Access") llMessageLinked(-1,999,"access menu",id);
 		else if (message == "hide reset") llMessageLinked(-1,999,"reset",id);
-        @break;
     }
     run_time_permissions(integer perm){
         if (perm & PERMISSION_TRIGGER_ANIMATION){
